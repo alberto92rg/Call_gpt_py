@@ -18,7 +18,7 @@ def analyze_text():
         return jsonify({"error": "Testo vuoto"}), 400
 
     # Prompt che chiede un punteggio e una spiegazione
-    prompt = """
+    prompt = f"""
 Sei un'intelligenza artificiale esperta nel riconoscere fake news.
 
 Analizza il seguente testo e restituisci SOLO un JSON così:
@@ -43,7 +43,7 @@ Testo:
         )
 
         reply = response.choices[0].message["content"].strip()
-        print("Risposta GPT:\n", reply)  # stampa nel log
+        print("Risposta GPT:\n", reply)
 
         try:
             result = json.loads(reply)
@@ -51,13 +51,15 @@ Testo:
             print("Errore JSON:", e)
             return jsonify({"error": "Risposta non è JSON valido", "gpt_response": reply}), 500
 
-                return jsonify({
-                    "text": testo,
-                    "fake_news_score": result["fake_news_score"],
-                    "explanation": result["explanation"]
-                })
+        return jsonify({
+            "text": testo,
+            "fake_news_score": result["fake_news_score"],
+            "explanation": result["explanation"]
+        })
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()  # Stampa errore completo nei log
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
