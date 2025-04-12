@@ -43,13 +43,19 @@ Testo:
         )
 
         reply = response.choices[0].message["content"].strip()
-        result = json.loads(reply)
+        print("Risposta GPT:\n", reply)  # stampa nel log
 
-        return jsonify({
-            "text": testo,
-            "fake_news_score": result["fake_news_score"],
-            "explanation": result["explanation"]
-        })
+        try:
+            result = json.loads(reply)
+        except json.JSONDecodeError as e:
+            print("Errore JSON:", e)
+            return jsonify({"error": "Risposta non è JSON valido", "gpt_response": reply}), 500
+
+                return jsonify({
+                    "text": testo,
+                    "fake_news_score": result["fake_news_score"],
+                    "explanation": result["explanation"]
+                })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
