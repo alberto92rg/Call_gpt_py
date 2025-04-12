@@ -1,0 +1,8 @@
+# Nasconde il file con la chiave API
+*.env
+
+# File temporanei e di sistema
+__pycache__/
+*.pyc
+.env
+.DS_Store
